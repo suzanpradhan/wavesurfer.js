@@ -151,9 +151,9 @@ class WaveSurfer extends Player<WaveSurferEvents> {
 
     // Load audio if URL is passed or an external media with an src
     const url = this.options.url || this.options.media?.currentSrc || this.options.media?.src
-    if (url) {
-      this.load(url, this.options.peaks, this.options.duration)
-    }
+    // if (url) {
+    this.load(url, this.options.peaks, this.options.duration)
+    // }
   }
 
   private initTimerEvents() {
@@ -297,28 +297,32 @@ class WaveSurfer extends Player<WaveSurferEvents> {
   }
 
   /** Load an audio file by URL, with optional pre-decoded audio data */
-  public async load(url: string, channelData?: WaveSurferOptions['peaks'], duration?: number) {
+  public async load(url?: string, channelData?: WaveSurferOptions['peaks'], duration?: number) {
     if (this.isPlaying()) this.pause()
 
     this.decodedData = null
     this.duration = null
 
-    this.emit('load', url)
+    let blob = undefined
 
-    // Fetch the entire audio as a blob if pre-decoded data is not provided
-    const blob = channelData ? undefined : await Fetcher.fetchBlob(url, this.options.fetchParams)
+    if (url) {
+      this.emit('load', url)
 
-    // Set the mediaelement source to the URL
-    this.setSrc(url, blob)
+      // Fetch the entire audio as a blob if pre-decoded data is not provided
+      blob = channelData ? undefined : await Fetcher.fetchBlob(url, this.options.fetchParams)
+
+      // Set the mediaelement source to the URL
+      this.setSrc(url, blob)
+    }
 
     // Wait for the audio duration
     // It should be a promise to allow event listeners to subscribe to the ready and decode events
-    this.duration =
-      (await Promise.resolve(duration || this.getDuration())) ||
-      (await new Promise((resolve) => {
-        this.onceMediaEvent('loadedmetadata', () => resolve(this.getDuration()))
-      })) ||
-      (await Promise.resolve(0))
+    this.duration = duration ?? 0
+    //   (await Promise.resolve(duration || this.getDuration())) ||
+    //   (await new Promise((resolve) => {
+    //     this.onceMediaEvent('loadedmetadata', () => resolve(this.getDuration()))
+    //   })) ||
+    //   (await Promise.resolve(0))
 
     // Decode the audio data or use user-provided peaks
     if (channelData) {
