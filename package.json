@@ -73,5 +73,11 @@
     "ts-loader": "^9.4.2",
     "typedoc": "^0.24.6",
     "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@sinonjs/fake-timers": "6",
+    "@types/sinonjs__fake-timers": "6",
+    "@types/sizzle": "^2.3.3",
+    "sizzle": "^2.3.10"
   }
 }

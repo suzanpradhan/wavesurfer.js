@@ -5,7 +5,7 @@
       "ESNext",
       "DOM"
     ],
-    "module": "ESNext",
+    "module": "NodeNext",
     "moduleResolution": "nodenext",
     "allowUmdGlobalAccess": false,
     "declaration": true,
